@@ -9,18 +9,13 @@ void setup() {
 void draw() {
   background(0);
   pushMatrix();
-  if (image instanceof Movie) {
-    translate(width, 0);
-    rotate(PI/2);
-  }
   scale(scale);
   //disegna l'immagine o il frame del video
   image(image, 0, 0);
-  println(blackwhite.width);
-  println(image.width);
-  image(blackwhite.get((int)position.x, 0, width-(int)position.x, height), position.x, 0);
-  popMatrix();
+  image(blackwhite.get((int)(position.x), 0, (int)((width-position.x)), (int)(height)), (int)(position.x*scale), 0);
+  
   checkCurtain();
+  popMatrix();
 
   //disegna la tendina
   strokeWeight(2);
@@ -52,17 +47,9 @@ void setImage() {
     a.read();
   } else 
   image=loadImage(immagini[numero]);
-  int W, H;
-  scale=1;
-  if (image instanceof Movie) {
-    W=(int)(image.height*scale);
-    H=(int)(image.width*scale);
-  } else
-  {
-    W=(int)(image.width*scale);
-    H=(int)(image.height*scale);
-  }
-  surface.setSize(W, H);
+  scale=displayWidth/image.width*0.6;
+  if(scale>displayHeight/image.height*0.6)scale=displayHeight*1.0/image.height*0.6;
+  surface.setSize((int)(image.width*scale),(int)(image.height*scale));
   blackwhite= createGraphics(width, height);
   blackwhite.beginDraw();
   PImage a=loadImage(immagini[numero]);
