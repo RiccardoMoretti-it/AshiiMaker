@@ -1,7 +1,6 @@
 import java.util.concurrent.*;
 
 public class Ascii {
-
   char [][]matrix;//matrice che definisce i caratteri a schermo
   PFont font;
   float textHeight, textWidth;
@@ -50,7 +49,7 @@ PImage blackWhite(PImage image) {
 }
 
   boolean canThread=true;
-  int threadNumber=2;
+  int threadNumber=1;
   CountDownLatch counter;
   void threading() {
     if (width!=asciiImage.width)updateVideo();
@@ -96,9 +95,16 @@ PImage blackWhite(PImage image) {
             for(x=0;x<textWidth && x+currentX*textWidth<endX;x++){
             grey+=brightness(screen.get(floor(currentX*textWidth+x),floor(currentY*textHeight+y)));
             }
-         grey/=((x+1)*(y+1));
+         grey/=x*y;
+         try{
+           println(currentX+floor(startX/textWidth));
+           println(currentX+" + "+"floor "+" "+startX+" "+" / "+textWidth);
          matrix[currentX+floor(startX/textWidth)][currentY]=greyScale[(int)map(floor(grey), 0, 255, 0, greyScale.length-1)];
-        }
+         }
+         catch(Exception e){
+           println(); //<>//
+         }
+      }
       counter.countDown();
     }
   }
