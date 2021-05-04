@@ -32,7 +32,6 @@ public class Ascii {
     this.textHeight=textHeight;
     asciiImage.beginDraw();
     asciiImage.textFont(font);  
-    textMode(MODEL);
     this.textWidth=asciiImage.textWidth("a");
     asciiImage.endDraw();
     initializeMatrix();
@@ -50,14 +49,11 @@ PImage blackWhite(PImage image) {
 }
 
   boolean canThread=true;
-  int threadNumber=2;
+  int threadNumber=1;
   CountDownLatch counter;
   void threading() {
     if (width!=asciiImage.width)updateVideo();
     counter = new CountDownLatch(threadNumber);
-    for(int y=0;y<matrix[0].length;y++)
-    for(int x=0;x<matrix.length;x++)
-    matrix[x][y]=0;
     
     for (int i=0; i<threadNumber; i++) {
       canThread=false;
@@ -82,18 +78,18 @@ PImage blackWhite(PImage image) {
     }
     @Override
       public void run () {
-      PImage screen=blackWhite(get(startX, 0, endX, height));
+      PImage screen=blackWhite(get(startX, 0, width, height));
       canThread=true;
       screen.loadPixels();
       int grey;
       int x,y;
-      for(int currentY=0;currentY<ceil(height/textHeight);currentY++)
+      for(int currentY=0;currentY<matrix[0].length;currentY++)
         for(int currentX=0;currentX<(endX-startX)/textWidth;currentX++){
           grey=0;
           x=0;
           y=0;
           for(y=0;y<textHeight && y+currentY*textHeight<height;y++)
-            for(x=0;x<textWidth && x+currentX*textWidth<endX;x++){
+            for(x=0;x<textWidth && x+currentX*textWidth<width;x++){
             grey+=brightness(screen.get(floor(currentX*textWidth+x),floor(currentY*textHeight+y)));
             }
          grey/=((x+1)*(y+1));
@@ -110,7 +106,7 @@ PImage blackWhite(PImage image) {
     asciiImage.background(0);
     for (int y=0; y<matrix[0].length; y++)
       for (int x=0; x<matrix.length; x++)
-        asciiImage.text(matrix[x][y], textWidth*x, textHeight/2+textHeight*y);
+        asciiImage.text(matrix[x][y], textWidth*x, textHeight*2/3+textHeight*y);
 
     asciiImage.endDraw();
     checkCurtain();
@@ -134,8 +130,21 @@ PImage blackWhite(PImage image) {
 
   void mousePressed() {
     if (mouseButton==37)press=true;
+    if (mouseButton==3){
+      String a="";
+    for (int y=0; y<matrix[0].length; y++){
+    for (int x=0; x<matrix.length; x++)
+        a+=String.valueOf(matrix[x][y]);
+        a+="\n";
+      }
+      PrintWriter output= createWriter("positions.txt");
+      output.println(a);  
+      output.flush();  // Writes the remaining data to the file
+      output.close(); 
+    }
     if (mouseButton==39)
       setImage();
+
   }
   void mouseReleased() {
     if (mouseButton==37)press=false;
