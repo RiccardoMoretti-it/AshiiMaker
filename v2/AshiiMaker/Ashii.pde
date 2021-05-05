@@ -23,7 +23,7 @@ public class Ascii {
     //setup ascii immagine
     asciiImage= createGraphics(width, height);
     if(font!=null)
-    initializeMatrix();
+    initializeMatrix(); //<>//
   }
   
   //al cambio di immagine vengono aggiornati i parametri
@@ -93,8 +93,6 @@ PImage blackWhite(PImage image) {
             }
          grey/=x*y;
          try{
-           println(currentX+floor(startX/textWidth));
-           println(currentX+" + "+"floor "+" "+startX+" "+" / "+textWidth);
          matrix[currentX+floor(startX/textWidth)][currentY]=greyScale[(int)map(floor(grey), 0, 255, 0, greyScale.length-1)];
          }
          catch(Exception e){
@@ -136,7 +134,15 @@ PImage blackWhite(PImage image) {
 
   void mousePressed() {
     if (mouseButton==37)press=true;
-    if (mouseButton==3){
+    if (mouseButton==39)
+      setImage();
+
+  }
+  void mouseReleased() {
+    if (mouseButton==37)press=false;
+  }
+  void keyPressed(){
+    if(keyCode==32){
       String a="";
     for (int y=0; y<matrix[0].length; y++){
     for (int x=0; x<matrix.length; x++)
@@ -148,11 +154,5 @@ PImage blackWhite(PImage image) {
       output.flush();  // Writes the remaining data to the file
       output.close(); 
     }
-    if (mouseButton==39)
-      setImage();
-
-  }
-  void mouseReleased() {
-    if (mouseButton==37)press=false;
   }
 }
