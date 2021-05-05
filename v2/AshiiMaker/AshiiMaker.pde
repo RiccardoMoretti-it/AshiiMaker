@@ -1,5 +1,5 @@
 import processing.video.*; //libreria per implementazione  video
-
+float frames=0;
 PImage image; //immagine o video (non relativo alla classe Ascii)
 Ascii toAscii;
 void setup() {
@@ -12,7 +12,8 @@ void draw() {
  image(image, 0, 0);
   toAscii.threading();
   toAscii.showMatrix();
-  println(frameRate);
+  frames+=frameRate;
+  if(frameCount%10==0)println(frames/frameCount);
 }
 void setImage() {
   //immagini contiene i nomi di tutti i file nella cartella /data

@@ -77,19 +77,19 @@ PImage blackWhite(PImage image) {
     }
     @Override
       public void run () {
-      PImage screen=blackWhite(get(startX, 0, width, height));
+      PImage screen=blackWhite(get(0, 0, width, height));
       canThread=true;
       screen.loadPixels();
       int grey;
-      int x,y;
+      int x=0,y;
       for(int currentY=0;currentY<matrix[0].length;currentY++)
-        for(int currentX=0;currentX<(endX-startX)/textWidth;currentX++){
+        for(int currentX=0;currentX<matrix.length;currentX++){
           grey=0;
-          x=0;
-          y=0;
-          for(y=0;y<textHeight && y+currentY*textHeight<height;y++)
-            for(x=0;x<textWidth && x+currentX*textWidth<width;x++){
-            grey+=brightness(screen.get(floor(currentX*textWidth+x),floor(currentY*textHeight+y)));
+          float currentHeight=currentY*textHeight;
+          float currentWidth=currentX*textWidth;
+          for(y=0;y<textHeight && y+currentHeight<height;y++)
+            for(x=0;x<textWidth && x+currentWidth<width;x++){
+            grey+=brightness(screen.pixels[(floor(currentWidth+x)+width*floor(currentHeight+y))]);
             }
          grey/=x*y;
          try{
@@ -117,10 +117,7 @@ PImage blackWhite(PImage image) {
 
     //disegna solo la porzione scelta con lo slider
     PImage a=asciiImage.get((int)(position.x), 0, (int)(width-position.x), (height));
-    //tint(0, 153, 204);    ///RIMUOVI///
     image(a, position.x,0);
-    //noTint();    ///RIMUOVI///
-    //disegna la tendina
     strokeWeight(2);
     line(position.x, 0, position.x, height);
     ellipse(position.x, position.y, size, size);
