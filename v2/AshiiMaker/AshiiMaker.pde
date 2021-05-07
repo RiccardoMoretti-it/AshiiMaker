@@ -1,23 +1,27 @@
-import processing.video.*; //libreria per implementazione  video
+import processing.video.*; //libreria per implementazione  video //<>//
 float frames=0;
 PImage image; //immagine o video (non relativo alla classe Ascii)
-Ascii toAscii;
+Ascii toAscii; 
+Capture cam;
+
 void setup() {
   //inzializza le variabili non relative alla calsse
   setupImages();
-  toAscii=new Ascii(createFont("fonts//Console.ttf", fontSize),fontSize); 
+  toAscii=new Ascii(createFont("fonts//Console.ttf", fontSize), fontSize);
 }
 void draw() {
   //disegna l'immagine o il frame del video
- image(image, 0, 0);
+  if (image instanceof Capture)
+    ((Capture)image).read();
+  image(image, 0, 0);
   toAscii.threading();
   toAscii.showMatrix();
   frames+=frameRate;
-  if(frameCount%10==0)println(frames/frameCount);
+  if (frameCount%10==0)println(frameRate);
 }
 void setImage() {
   //immagini contiene i nomi di tutti i file nella cartella /data
-  String[] immagini; //<>//
+  String[] immagini;
 
   //sceglie a random un video o immagine
   File folder = new File(dataPath(""));
@@ -29,26 +33,32 @@ void setImage() {
     numero=(int)random(immagini.length);
   while (immagini[numero].split("\\.").length<2);
   //controlla se è un video o meno
-  float scale;
-  if (immagini[numero].split("\\.")[immagini[numero].split("\\.").length-1].equals("mp4")) {
+  float scale=1;
+  if (camera) {
+    String[] cameras = Capture.list();  
+    cam = new Capture(this, cameras[0]);
+    cam.start(); 
+    image=cam;
+  } else if (immagini[numero].split("\\.")[immagini[numero].split("\\.").length-1].equals("mp4")) {
     image=new Movie(this, immagini[numero]);
     Movie a=(Movie)image;
     a.loop();
     a.read();
     scale=1;
   } else {
-  image=loadImage(immagini[numero]);
-  println(image.width+" "+image.height);
-  //setta la dimensione della dinestra
-  scale=displayWidth/image.width*0.6;
-  if(scale>displayHeight/image.height*0.6)scale=displayHeight*1.0/image.height*0.6;
- }
-  surface.setSize((int)(image.width*scale),(int)(image.height*scale));
+    image=loadImage(immagini[numero]);
+    println(image.width+" "+image.height);
+    //setta la dimensione della dinestra
+    scale=displayWidth/image.width*0.6;
+    if (scale>displayHeight/image.height*0.6)scale=displayHeight*1.0/image.height*0.6;
+  }
+  surface.setSize((int)(image.width*scale), (int)(image.height*scale));
   //ridimensione le immagini
   image.resize(width, height);
-  if(image instanceof Movie){
+  if (image instanceof Movie) {
     Movie a=(Movie)image;
-    a.loop();}
+    a.loop();
+  }
 }
 void setupImages() {
   setImage();
@@ -62,6 +72,6 @@ void mousePressed() {
 void mouseReleased() {
   toAscii.mouseReleased();
 }
-void keyPressed(){
+void keyPressed() {
   toAscii.keyPressed();
 }

@@ -140,7 +140,7 @@ PImage blackWhite(PImage image) {
   }
   void keyPressed(){
     if(keyCode==32){
-      String a="";
+      String a=""; //<>//
     for (int y=0; y<matrix[0].length; y++){
     for (int x=0; x<matrix.length; x++)
         a+=String.valueOf(matrix[x][y]);
