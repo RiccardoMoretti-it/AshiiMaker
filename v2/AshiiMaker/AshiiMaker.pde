@@ -35,7 +35,7 @@ void setImage() {
   //controlla se è un video o meno
   float scale=1;
   if (camera) {
-    String[] cameras = Capture.list();  
+    String[] cameras = Capture.list();   //<>//
     cam = new Capture(this, cameras[0]);
     cam.start(); 
     image=cam;
