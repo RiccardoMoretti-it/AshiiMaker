@@ -1,5 +1,6 @@
 import java.util.concurrent.*;
-
+import java.io.FileWriter;
+import java.io.*;
 public class Ascii {
   char [][]matrix;//matrice che definisce i caratteri a schermo
   PFont font;
@@ -147,17 +148,20 @@ PImage blackWhite(PImage image) {
       textHeight++;
       updateFont(font,textHeight);
     }
+    //Spazio: salva i dati su file
     if(keyCode==32){
-      String a=""; //<>//
+      String a="";
     for (int y=0; y<matrix[0].length; y++){
     for (int x=0; x<matrix.length; x++)
         a+=String.valueOf(matrix[x][y]);
         a+="\n";
       }
-      PrintWriter output= createWriter("positions.txt");
-      output.println(a);  
-      output.flush();  // Writes the remaining data to the file
-      output.close(); 
+      try{
+OutputStream output=createOutput("position.txt");
+        output.write(a.getBytes());  
+      output.flush();  
+      output.close(); }
+      catch(Exception e){}
     }
   }
 }
