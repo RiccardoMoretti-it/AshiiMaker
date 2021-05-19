@@ -28,9 +28,10 @@ public class Ascii {
   
   //al cambio di immagine vengono aggiornati i parametri
   void updateFont(PFont font, float textHeight) {
+    this.font=font;
     this.textHeight=textHeight;
     asciiImage.beginDraw();
-    asciiImage.textFont(font);  
+    asciiImage.textFont(font,textHeight);  
     this.textWidth=asciiImage.textWidth("a");
     asciiImage.endDraw();
     initializeMatrix();
@@ -138,7 +139,14 @@ PImage blackWhite(PImage image) {
   void mouseReleased() {
     if (mouseButton==37)press=false;
   }
-  void keyPressed(){
+  void keyPressed(){ if(keyCode==45){
+      textHeight--;
+      updateFont(font,textHeight);
+    }
+    if(keyCode==521){
+      textHeight++;
+      updateFont(font,textHeight);
+    }
     if(keyCode==32){
       String a=""; //<>//
     for (int y=0; y<matrix[0].length; y++){
