@@ -1,12 +1,16 @@
 import processing.video.*; //libreria per implementazione  video //<>//
-float frames=0;
+  import drop.*;
+  
+SDrop drop;
 PImage image; //immagine o video (non relativo alla classe Ascii)
 Ascii toAscii; 
 Capture cam;
 
-void setup() {
+void setup() { 
+  drop = new SDrop(this);
+
   //inzializza le variabili non relative alla calsse
-  setupImages();
+    randomImage();
   toAscii=new Ascii(createFont("fonts//Console.ttf", fontSize), fontSize);
 }
 void draw() {
@@ -14,13 +18,27 @@ void draw() {
   if (image instanceof Capture)
     ((Capture)image).read();
   image(image, 0, 0);
+  
   toAscii.threading();
   toAscii.showMatrix();
-  frames+=frameRate;
-  if (frameCount%10==0)println(frameRate);
 }
+  //controlla se è un video o meno
+  float scale=1;
 void setImage() {
-  //immagini contiene i nomi di tutti i file nella cartella /data
+  if (!(image instanceof Movie)){
+    scale=displayWidth/image.width*0.4;
+    if (scale>displayHeight/image.height*0.6)scale=displayHeight*1.0/image.height*0.6;
+  }  
+  surface.setSize((int)(image.width*scale), (int)(image.height*scale));
+  //ridimensione le immagini
+  image.resize(width, height);
+  if (image instanceof Movie) {
+    Movie a=(Movie)image;
+    a.loop();
+  }
+}
+void randomImage(){
+//immagini contiene i nomi di tutti i file nella cartella /data
   String[] immagini;
 
   //sceglie a random un video o immagine
@@ -32,35 +50,28 @@ void setImage() {
   do
     numero=(int)random(immagini.length);
   while (immagini[numero].split("\\.").length<2);
-  //controlla se è un video o meno
-  float scale=1;
+  
+  //camera
   if (camera) {
-    String[] cameras = Capture.list();   //<>//
-    cam = new Capture(this, cameras[0]);
+    cam = new Capture(this, "pipeline:autovideosrc");
     cam.start(); 
     image=cam;
-  } else if (immagini[numero].split("\\.")[immagini[numero].split("\\.").length-1].equals("mp4")) {
+  } 
+  //video
+  else if (immagini[numero].split("\\.")[immagini[numero].split("\\.").length-1].equals("mp4")) {
     image=new Movie(this, immagini[numero]);
     Movie a=(Movie)image;
     a.loop();
     a.read();
     scale=1;
-  } else {
+  }
+  //immagine
+  else {
     image=loadImage(immagini[numero]);
-    println(image.width+" "+image.height);
     //setta la dimensione della dinestra
-    scale=displayWidth/image.width*0.6;
+    scale=displayWidth/image.width*0.4;
     if (scale>displayHeight/image.height*0.6)scale=displayHeight*1.0/image.height*0.6;
   }
-  surface.setSize((int)(image.width*scale), (int)(image.height*scale));
-  //ridimensione le immagini
-  image.resize(width, height);
-  if (image instanceof Movie) {
-    Movie a=(Movie)image;
-    a.loop();
-  }
-}
-void setupImages() {
   setImage();
 }
 void movieEvent(Movie m) {
@@ -74,4 +85,12 @@ void mouseReleased() {
 }
 void keyPressed() {
   toAscii.keyPressed();
+}
+void dropEvent(DropEvent theDropEvent) {
+  if(theDropEvent.isImage()) {
+    image = theDropEvent.loadImage();
+    while(toAscii.threading);
+        setImage();
+  toAscii=new Ascii(createFont("fonts//Console.ttf", fontSize), fontSize);
+  }
 }
