@@ -118,15 +118,15 @@ public class Ascii {
   }
 
   void checkCurtain() {
-    ///CAMBIARE (IMAGE.WIDTH ECC)///
     if (press)
       position=new PVector(constrain(mouseX, 0, width), constrain(mouseY, 0, height));
   }
 
   void mousePressed() {
     if (mouseButton==37)press=true;
-    if (mouseButton==39)
+    if (mouseButton==39){
       randomImage();
+  }
   }
   void mouseReleased() {
     if (mouseButton==37)press=false;

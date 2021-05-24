@@ -1,13 +1,10 @@
 import processing.video.*; //libreria per implementazione  video //<>//
-  import drop.*;
   
-SDrop drop;
 PImage image; //immagine o video (non relativo alla classe Ascii)
 Ascii toAscii; 
 Capture cam;
 
 void setup() { 
-  drop = new SDrop(this);
 
   //inzializza le variabili non relative alla calsse
     randomImage();
@@ -85,12 +82,4 @@ void mouseReleased() {
 }
 void keyPressed() {
   toAscii.keyPressed();
-}
-void dropEvent(DropEvent theDropEvent) {
-  if(theDropEvent.isImage()) {
-    image = theDropEvent.loadImage();
-    while(toAscii.threading);
-        setImage();
-  toAscii=new Ascii(createFont("fonts//Console.ttf", fontSize), fontSize);
-  }
 }
