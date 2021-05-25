@@ -2,4 +2,4 @@ char[] greyScale="        ''''''''..................------------\"\"\"\"\"\"\"\"
 int fontSize=60;
 //slider
 
-boolean camera=false;
+boolean camera=true;

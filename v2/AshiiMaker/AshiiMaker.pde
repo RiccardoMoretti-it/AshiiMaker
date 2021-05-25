@@ -22,7 +22,7 @@ void draw() {
   //controlla se è un video o meno
   float scale=1;
 void setImage() {
-  if (!(image instanceof Movie)){
+  if (!(image instanceof Movie) && !(image instanceof Capture)){
     scale=displayWidth/image.width*0.4;
     if (scale>displayHeight/image.height*0.6)scale=displayHeight*1.0/image.height*0.6;
   }  
