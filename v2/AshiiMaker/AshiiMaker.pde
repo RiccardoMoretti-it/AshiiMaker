@@ -12,10 +12,14 @@ void setup() {
 }
 void draw() {
   //disegna l'immagine o il frame del video
-  if (image instanceof Capture)
-    ((Capture)image).read();
-  image(image, 0, 0);
-  
+  if (image instanceof Capture){
+    Capture cam=((Capture)image);
+  if (cam.available() == true) {
+    cam.read();
+  }
+  set(0, 0, cam);
+  }
+  else image(image, 0, 0);
   toAscii.threading();
   toAscii.showMatrix();
 }
@@ -51,8 +55,8 @@ void randomImage(){
   //camera
   if (camera) {
     cam = new Capture(this, "pipeline:autovideosrc");
-    cam.start(); 
     image=cam;
+    cam.start(); 
   } 
   //video
   else if (immagini[numero].split("\\.")[immagini[numero].split("\\.").length-1].equals("mp4")) {
